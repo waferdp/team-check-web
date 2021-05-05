@@ -1,27 +1,28 @@
 <template>
     <div v-if="hasData">
-        <ul class="list-group gap-3">
+        <ul class="list-group">
             <li class="list-group-item border" v-bind:key="item.index" v-for="item in getPage().items">
-                <span>{{item.index + 1}}: {{item.key}}</span>
-                <div class="row">
-                    <div class="col-md-3">
+                <div class="mt-3">
+                    <span>{{item.index + 1}}: {{item.key}}</span>
+                </div>
+                <div class="row mt-5 mb-3 m-1">
+                    <div class="col-md-3 form-check form-check-inline">
                         <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-1'" v-bind:name="item.index" v-bind:value="1">
-                        <label class="form-check-label" v-bind:for="item.index + '-1'">1. Disagree strongly</label>
+                        <label role="button" class="form-check-label" v-bind:for="item.index + '-1'">1. Disagree strongly</label>
                     </div>
-
-                    <div class="col-md-3">
+                    <div class="col-md-3 form-check form-check-inline">
                         <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-2'" v-bind:name="item.index" v-bind:value="2">
-                        <label class="form-check-label" v-bind:for="item.index + '-2'">2. Disagree to some extent</label>
+                        <label role="button" class="form-check-label" v-bind:for="item.index + '-2'">2. Disagree to some extent</label>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-3 form-check form-check-inline">
                         <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id= "item.index + '-3'" v-bind:name="item.index" v-bind:value="3">
-                        <label class="form-check-label" v-bind:for="item.index + '-3'">3. Agree to some extent</label>
+                        <label role="button" class="form-check-label" v-bind:for="item.index + '-3'">3. Agree to some extent</label>
                     </div>
 
-                    <div class="col-md-3">
+                    <div class="col-md-2 form-check form-check-inline">
                         <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-4'" v-bind:name="item.index" v-bind:value="4">
-                        <label class="form-check-label" v-bind:for="item.index + '-4'">4. Agree strongly</label>
+                        <label role="button" class="form-check-label" v-bind:for="item.index + '-4'">4. Agree strongly</label>
                     </div>
                 </div>
             </li>
@@ -39,9 +40,9 @@
             </div>
         </div>
         <div class="row" v-if="errors.length">
-            <div class="col-md-12" v-for="error in errors" v-bind:key="error">
-                <div class="alert alert-danger">
-                    {{error}}
+            <div class="col-md-12" v-for="error in errors" v-bind:key="error.page">
+                <div class="alert alert-danger" v-on:click="gotoPage(error.page)" role="button">
+                    {{error.message}}
                 </div>
             </div>
         </div>
@@ -54,6 +55,13 @@
         checklistApi : process.env.VUE_APP_SERVER + '/api/performance-checklist'
     }
 
+    function compileErrorMessage(errorsOnPage, pageNumber) {
+        var message = `Question${errorsOnPage.length > 1 ? 's' : ''} ` +
+            ` ${errorsOnPage.map(error => error.question + 1)}` +
+            ` on page ${pageNumber} ${errorsOnPage.length > 1 ? 'are' : 'is'} not answered`;
+        return message;
+    }
+    
     module.exports = {
         data: function() {
             return {
@@ -70,7 +78,6 @@
             };
         },
         created: function() {
-            console.log(process.env.VUE_APP_SERVER)
             this.fetchJsonData()
             .then(json => {
                 this.result = json.map((e, i) => {
@@ -109,6 +116,9 @@
             prevPage() {
                 this.pagination.currentPage--;
             },
+            gotoPage(pageNumber) {
+                this.pagination.currentPage = pageNumber;
+            },
             fetchJsonData() {
                 this.loading = true;
                 return fetch(endpoints.checklistQuestions)
@@ -134,9 +144,14 @@
                 var errors = [];
                 var totalPages = Math.floor(this.result.length / this.pagination.itemsPerPage);
                 for (var i = 0; i < totalPages; i++) {
+                    var pageNumber = i+1;
                     var errorsOnPage = validationErrors.filter(error => error.page === i);
                     if(errorsOnPage.length) {
-                        errors.push(`Question${errorsOnPage.length > 1 ? 's' : ''} ${errorsOnPage.map(error => error.question + 1)} on page ${i+1} ${errorsOnPage.length > 1 ? 'are' : 'is'} not answered`);
+                        var pageError = {
+                            page : pageNumber,
+                            message : compileErrorMessage(errorsOnPage, pageNumber)
+                        };
+                        errors.push(pageError);
                     }
                 }
                 this.errors = errors;
