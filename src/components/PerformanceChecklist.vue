@@ -65,6 +65,7 @@
             };
         },
         created: function() {
+            console.log(process.env.SERVER)
             this.fetchJsonData()
             .then(json => {
                 this.result = json.map((e, i) => {
