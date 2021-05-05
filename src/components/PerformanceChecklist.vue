@@ -49,6 +49,11 @@
 </template>
 
 <script>
+    const endpoints = {
+        checklistQuestions : '/performance_checklist.json',
+        checklistApi : process.env.VUE_APP_SERVER + '/api/performance-checklist'
+    }
+
     module.exports = {
         data: function() {
             return {
@@ -65,7 +70,7 @@
             };
         },
         created: function() {
-            console.log(process.env.SERVER)
+            console.log(process.env.VUE_APP_SERVER)
             this.fetchJsonData()
             .then(json => {
                 this.result = json.map((e, i) => {
@@ -106,7 +111,7 @@
             },
             fetchJsonData() {
                 this.loading = true;
-                return fetch('/performance_checklist.json')
+                return fetch(endpoints.checklistQuestions)
                 .then(res => {
                     return res.json();
                 })
@@ -142,12 +147,7 @@
                 if(this.errors.length) {
                     return;
                 }
-                console.log(JSON.stringify(this.result));
-                var url = '/api/performance-checklist';
-                if(process.env.VUE_APP_SERVER) {
-                    url = process.env.VUE_APP_SERVER + url;
-                }
-                fetch(url, {
+                fetch(endpoints.checklistApi, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
