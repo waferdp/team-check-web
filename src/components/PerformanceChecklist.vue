@@ -143,7 +143,11 @@
                     return;
                 }
                 console.log(JSON.stringify(this.result));
-                fetch('/api/performance-checklist', {
+                var url = '/api/performance-checklist';
+                if(process.env.VUE_APP_SERVER) {
+                    url = process.env.VUE_APP_SERVER + url;
+                }
+                fetch(url, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
