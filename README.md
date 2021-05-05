@@ -1,6 +1,11 @@
 # TeamCheckFrontend
 Frontend for TeamCheck application
 
+## Install Vue CLI
+```
+npm install -g @vue/cli
+```
+
 ## Project setup
 ```
 npm install
