@@ -48,7 +48,7 @@ jobs:
       with:
         azcliversion: 2.0.72
         inlineScript: |
-           az cdn endpoint purge --content-paths  "/*" --profile-name "jacob-team-chech-cdn" --name "jacob-team-check (jacob-team-check)" --resource-group "TeamCheckv"
+           az cdn endpoint purge --content-paths  "/*" --profile-name "jacob-cdn" --name "jacob-team-check" --resource-group "TeamCheck"
     # Azure logout 
     - name: logout
       run: |
