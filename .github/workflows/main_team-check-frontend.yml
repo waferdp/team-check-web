@@ -1,5 +1,5 @@
 
-name: Azure App Service - TeamCheckFrontend, Build and deploy Vue frontend in node
+name: Azure Blob storage  - TeamCheckFrontend, Build and deploy Vue frontend in node
 
 env:
   NODE_VERSION: '14.x'                # set this to the node version to use
@@ -31,10 +31,25 @@ jobs:
     - name: Build with npm
       run: npm run build --if-present
 
-    - name: Run Azure webapp deploy action using publish profile credentials
-      uses: azure/webapps-deploy@v2
+    - name: Login to Azure
+      uses: azure/login@v1
       with:
-        app-name: jacob-team-check
-        slot-name: Production
-        publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_A16C84AA282E4D59AB88D41E8D4F61BD }}
-        package: ./dist
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+  
+    - name: Upload to blob storage
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+            az storage blob upload-batch --account-name jacobstore -d '$web' -s ./dist         
+
+    - name: Purge CDN endpoint
+      uses: azure/CLI@v1
+      with:
+        azcliversion: 2.0.72
+        inlineScript: |
+           az cdn endpoint purge --content-paths  "/*" --profile-name "jacob-team-chech-cdn" --name "jacob-team-check (jacob-team-check)" --resource-group "TeamCheckv"
+    # Azure logout 
+    - name: logout
+      run: |
+            az logout
