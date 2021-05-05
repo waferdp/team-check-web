@@ -5,23 +5,23 @@
                 <span>{{item.index + 1}}: {{item.key}}</span>
                 <div class="row">
                     <div class="col-md-3">
-                        <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-1'" v-bind:name="item.index" value="1">
+                        <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-1'" v-bind:name="item.index" v-bind:value="1">
                         <label class="form-check-label" v-bind:for="item.index + '-1'">1. Disagree strongly</label>
                     </div>
 
                     <div class="col-md-3">
-                        <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-2'" v-bind:name="item.index" value="2">
+                        <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-2'" v-bind:name="item.index" v-bind:value="2">
                         <label class="form-check-label" v-bind:for="item.index + '-2'">2. Disagree to some extent</label>
                     </div>
 
                     <div class="col-md-3">
-                        <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id= "item.index + '-3'" v-bind:name="item.index" value="3">
+                        <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id= "item.index + '-3'" v-bind:name="item.index" v-bind:value="3">
                         <label class="form-check-label" v-bind:for="item.index + '-3'">3. Agree to some extent</label>
                     </div>
 
                     <div class="col-md-3">
-                        <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-4'" v-bind:name="item.index" value="4">
-                        <label class="form-check-label" for="item.index + '-4'">4. Agree strongly</label>
+                        <input class="form-check-input" type="radio" v-model="item.value" v-bind:key="item.index" v-bind:id="item.index + '-4'" v-bind:name="item.index" v-bind:value="4">
+                        <label class="form-check-label" v-bind:for="item.index + '-4'">4. Agree strongly</label>
                     </div>
                 </div>
             </li>
@@ -150,8 +150,8 @@
                     body: JSON.stringify(this.result)
                 })
                 .then(res =>{
-                    alert('Everything went well ');
-                    console.warn(res);
+                    alert('Response from  ' + res.statusText);
+                    console.log(res);
                 });
             }
         }
