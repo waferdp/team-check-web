@@ -41,7 +41,7 @@ jobs:
       with:
         azcliversion: 2.0.72
         inlineScript: |
-            az storage blob upload-batch --account-name jacobstore -d '$web' -s ./dist         
+            az storage blob upload-batch --account-name jacobstore -d 'web' -s ./dist         
 
     - name: Purge CDN endpoint
       uses: azure/CLI@v1
