@@ -6,8 +6,8 @@ env:
 
 on:
   push:
-    branches:
-      - main
+    branches-ignore:
+      - '**'
 
 jobs:
   build-and-deploy:
