@@ -6,13 +6,13 @@ env:
 
 on:
   push:
-    branches:
-      - main
+    branches-ignore:
+      - '**'
 
 jobs:
   build-and-deploy:
     name: Build and deploy
-    environment: production
+    environment: production-obsolete
     runs-on: ubuntu-latest
 
     steps:
@@ -41,7 +41,7 @@ jobs:
       with:
         azcliversion: 2.0.72
         inlineScript: |
-            az storage blob upload-batch --account-name jacobstore -d '$web' -s ./dist         
+            az storage blob upload-batch --account-name jacobstore -d 'web' -s ./dist         
 
     - name: Purge CDN endpoint
       uses: azure/CLI@v1
