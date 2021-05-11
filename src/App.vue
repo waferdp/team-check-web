@@ -24,19 +24,21 @@
 <script>
 import PerformanceChecklist from './components/PerformanceChecklist.vue';
 import TeamSelector from './components/TeamSelector.vue';
+import VueRouter from 'vue-router';
 
 const routes = [
   { path: '/performance-checklist', component: PerformanceChecklist },
   { path: '/team/:id', component: TeamSelector}
 ]
-this.Router.addRoute(routes)
+
+const Router = new VueRouter({
+  routes
+});
 
 export default {
   name: 'App',
-  props: {
-    Router: Object
-  },
   components: {
+    Router,
     PerformanceChecklist,
     TeamSelector
   }

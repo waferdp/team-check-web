@@ -9,6 +9,6 @@ const Router = new VueRouter()
 Vue.config.productionTip = false
 
 new Vue({
-  Router,
-  render: h => h(App(Router)),
+  router: Router,
+  render: h => h(App),
 }).$mount('#app')
