@@ -1,7 +1,7 @@
 <template>
     <div v-if="hasData">
         <ul class="list-group">
-            <checklist-item v-bind:key="item.index" :item=item  v-for="item in getPage().items" />
+            <checklist-item v-bind:key="item.index" v-on:update="update" :item=item v-for="item in getPage().items" />
         </ul>
         <div class="row">
             <div class="col-md-3">
@@ -60,16 +60,20 @@
             };
         },
         created: function() {
-            this.fetchJsonData()
-            .then(json => {
-                this.result = json.map((e, i) => {
-                    return {  
-                        index: i,
-                        key: e,
-                        value: null
-                    };
+            if(this.$store.survey) {
+                this.result = this.$store.survey;
+            } else {
+                this.fetchJsonData()
+                .then(json => {
+                    this.result = json.map((e, i) => {
+                        return {  
+                            index: i,
+                            key: e,
+                            value: null
+                        };
+                    });
                 });
-            });
+            }
         },
         computed: {
             hasData() {
@@ -100,6 +104,9 @@
             },
             gotoPage(pageNumber) {
                 this.pagination.currentPage = pageNumber;
+            },
+            update() {
+                this.$store.survey = this.result;
             },
             fetchJsonData() {
                 this.loading = true;
