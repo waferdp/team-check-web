@@ -12,7 +12,7 @@
             </div>
             <div class="offset-md-2 col-md-3">
                 <button type="button" class="btn btn-outline-primary float-end" v-if="!isLastPage" v-on:click="nextPage">Next</button>
-                <input type="submit" class="btn btn-primary float-end" v-if="isLastPage" v-on:click="sendJsonData">
+                <input type="submit" class="btn btn-primary float-end" v-if="isLastPage" v-on:click="postSurvey">
             </div>
         </div>
         <div class="row" v-if="errors.length">
@@ -47,12 +47,12 @@
         },
         data: function() {
             return {
-                result: [],
+                questions: [],
                 errors: [],
                 pagination: {
                     currentPage : 1,
                     totalPages: function () {
-                        return !this.hasData() ? 0 : Math.floor(this.result.length / this.itemsPerPage) + 1; 
+                        return !this.hasData() ? 0 : Math.floor(this.questions.length / this.itemsPerPage) + 1; 
                     },
                     itemsPerPage: 5
                 },
@@ -60,12 +60,12 @@
             };
         },
         created: function() {
-            if(this.$store.survey) {
-                this.result = this.$store.survey;
+            if(this.$store.questions) {
+                this.questions = this.$store.questions;
             } else {
-                this.fetchJsonData()
+                this.fetchQuestions()
                 .then(json => {
-                    this.result = json.map((e, i) => {
+                    this.questions = json.map((e, i) => {
                         return {  
                             index: i,
                             key: e,
@@ -77,20 +77,20 @@
         },
         computed: {
             hasData() {
-                return this.result.length > 0;
+                return this.questions.length > 0;
             },
             isFirstPage() {
                 return this.pagination.currentPage <= 1;
             },
             isLastPage() {
-                return this.pagination.currentPage * this.pagination.itemsPerPage >= this.result.length;
+                return this.pagination.currentPage * this.pagination.itemsPerPage >= this.questions.length;
             },
         },
         methods: {
             getPage(){ 
                 var end = this.pagination.currentPage * this.pagination.itemsPerPage;
                 var start = end - this.pagination.itemsPerPage;
-                var items = this.result.slice(start, end);
+                var items = this.questions.slice(start, end);
                 return  {
                     pagination: this.pagination,
                     items: items
@@ -106,9 +106,9 @@
                 this.pagination.currentPage = pageNumber;
             },
             update() {
-                this.$store.survey = this.result;
+                this.$store.questions = this. questions;
             },
-            fetchJsonData() {
+            fetchQuestions() {
                 this.loading = true;
                 return fetch(endpoints.checklistQuestions)
                 .then(res => {
@@ -121,7 +121,7 @@
             },
             validateForm() {
                 var validationErrors = [];
-                this.result.forEach(item => {
+                this.questions.forEach(item => {
                     if(!item.value) {
                         let newError = {
                             question: item.index,
@@ -131,7 +131,7 @@
                     }
                 });
                 var errors = [];
-                var totalPages = Math.floor(this.result.length / this.pagination.itemsPerPage);
+                var totalPages = Math.floor(this.questions.length / this.pagination.itemsPerPage);
                 for (var i = 0; i < totalPages; i++) {
                     var pageNumber = i+1;
                     var errorsOnPage = validationErrors.filter(error => error.page === i);
@@ -145,7 +145,7 @@
                 }
                 this.errors = errors;
             },
-            sendJsonData() {
+            postSurvey() {
                 this.validateForm();
 
                 if(this.errors.length) {
@@ -156,7 +156,7 @@
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(this.result)
+                    body: JSON.stringify(this.questions)
                 })
                 .then(res =>{
                     alert('Response from  ' + res.statusText);
