@@ -159,7 +159,7 @@
                     body: JSON.stringify(this.questions)
                 })
                 .then(res =>{
-                    alert('Response from  ' + res.statusText);
+                    alert('Response from server: ' + res.statusText);
                     console.log(res);
                 });
             }
