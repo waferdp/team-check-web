@@ -30,7 +30,7 @@
 
     const endpoints = {
         checklistQuestions : '/performance_checklist.json',
-        checklistApi : process.env.VUE_APP_SERVER + '/api/performance-checklist'
+        checklistApi : process.env.VUE_APP_SERVER + '/api/performance-checklists'
     }
 
     function compileErrorMessage(errorsOnPage, pageNumber) {
