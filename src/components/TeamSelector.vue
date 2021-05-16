@@ -7,6 +7,18 @@
                 <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
             </select>
         </div>
+        <div class="form-group">
+            <button class="btn btn-primary" v-if="!newTeam" v-on:click="createEmptyTeam">
+                New team
+            </button>
+            <div class="input-group" v-else>
+                <label class="input-group-text" for="new-team-name">Name</label>
+                <input class="form-control" v-model="newTeam.name" id="new-team-name">
+                <button class="input-group-button" v-on:click="addTeam">
+                    Add
+                </button>
+            </div>
+        </div>
         <div v-if="selectedTeam" class="card">
             <div class="form-group">
                 <!-- <label class="card-title" for="selected-name"> -->
@@ -32,6 +44,9 @@
                     </li>
                 </ul>
                 <div>
+                    <button class="btn btn-danger mt-3" v-on:click="deleteTeam">
+                        <span>Delete team</span>
+                    </button>
                     <button class="btn btn-primary mt-3" v-on:click="addMember">
                         <span>New team member</span>
                     </button>
@@ -52,16 +67,14 @@
         created: function() {
             this.selected = this.$store.team;
             
-            this.fetchTeams()
-            .then(teams => {
-                this.teams = teams;
-            });
+            this.updateTeams();
         },
         data: function() {
             return {
                 selected: null,
                 selectedTeam: null,
                 loading: false,
+                newTeam: null,
                 teams: []
             }
         },
@@ -81,20 +94,42 @@
                         return json;
                     });
             },
-            saveTeam: function() {
-                fetch(endpoints.teamApi, {
+            updateTeams: function() {
+                return this.fetchTeams()
+                .then(teams => {
+                    this.teams = teams;
+                    return teams;
+                });
+            },
+            postTeam: function(team) {
+                return fetch(endpoints.teamApi, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(this.selectedTeam)
+                    body: JSON.stringify(team)
                 })
                 .then(res => {
-                    return res.json()
-                })
+                    return res.json();
+                });
+            },
+            saveTeam: function() {
+                return this.postTeam(this.selectedTeam)
                 .then(json => {
                     this.selectedTeam = json;
                 });
+            },
+            addTeam: function() {
+                return this.postTeam(this.newTeam)
+                .then(() => {
+                    this.newTeam = null;
+                    this.updateTeams();
+                });
+            },
+            createEmptyTeam: function() {
+                this.newTeam = {
+                    name: ""
+                };
             },
             addMember: function() {
                 this.selectedTeam.members.push({
@@ -103,11 +138,20 @@
             },
             removeMember: function(id) {
                 var members = this.selectedTeam.members;
-                var removed = members.filter(member => {
-                    return member.id != id
-                });
+                var removed = members.filter(member => member.id != id);
                 this.selectedTeam.members = removed;
                 this.saveTeam();
+            },
+            deleteTeam: function() {
+                var id = this.selectedTeam.id;
+                return fetch(endpoints.teamApi + '/' + this.selectedTeam.id, {
+                    method: 'DELETE'
+                })
+                .then(() => {
+                    this.selectedTeam = null;
+                    this.selected = null;
+                    this.teams = this.teams.filter(team => team.id != id);
+                });
             }
         }
     }
