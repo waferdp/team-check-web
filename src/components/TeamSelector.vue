@@ -1,21 +1,42 @@
 <template>
-    <div>
-        <h2>Select team</h2>
-        <select class="form-select" v-model="selected" v-on:change="updateState">
-            <option disabled value="null">Please choose a team</option>
-            <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
-        </select>
-        <div v-if="selected">
+    <div class="form-inline col-md-6">
+        <div class="form-group mt-3 mb-5">
+            <h2>Select team</h2>
+            <select class="form-select" v-model="selected" v-on:change="updateState">
+                <option disabled value="null">Please choose a team</option>
+                <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
+            </select>
+        </div>
+        <div v-if="selectedTeam" class="card">
             <div class="form-group">
-                <label for="selected-name">Team name</label>
-                <input class="form-input" v-model="selected.name" id="selected-name">
+                <!-- <label class="card-title" for="selected-name"> -->
+                <h3 class="card-title">{{selectedTeam.name}}</h3>
+                <!-- </label> -->
+                <!-- <input class="form-control" v-model="selectedTeam.name" id="selected-name"> -->
             </div>
-            <ul class="list-group" v-if="selected.members">
-                <li class="list-item" v-for="(member, index) in this.selected.members" v-bind:key="index">
-                    <label v-bind:for="index + '-name'">Team name</label>
-                    <input class="form-input" v-model="member.name" v-bind:id="index + '-name'">
-                </li>
-            </ul>
+            <h5 class="card-subtitle">Team members</h5>
+            <div class="form-group">
+                <ul class="list-group offset-md-1">
+                    <li class="list-item" v-for="(member, index) in this.selectedTeam.members" v-bind:key="index">
+                        <div class="input-group" v-if="member.id">
+                            <span>{{member.name}}&nbsp;</span>
+                            <a class="btn btn-default" href="#" v-on:click="removeMember(member.id)">-</a>
+                        </div>
+                        <div class="input-group" v-else>
+                            <label class="input-group-text" v-bind:for="index + '-name'">Name</label>
+                            <input class="form-control" v-model="member.name" v-bind:id="index + '-name'">
+                            <button class="input-group-button" v-on:click="saveTeam">
+                                Add
+                            </button>
+                        </div>
+                    </li>
+                </ul>
+                <div>
+                    <button class="btn btn-primary mt-3" v-on:click="addMember">
+                        <span>New team member</span>
+                    </button>
+                </div>
+            </div>
         </div>
     </div>
 </template>
@@ -39,21 +60,14 @@
         data: function() {
             return {
                 selected: null,
+                selectedTeam: null,
                 loading: false,
-                teams: [
-                    {
-                        name: "BlueBerries",
-                        id: 1,
-                    },
-                    {
-                        name: "Raspberries",
-                        id: 2
-                    }
-                ]
+                teams: []
             }
         },
         methods: {
             updateState: function() {
+                this.selectedTeam = this.teams.find(team => team.name = this.selected);
                 this.$store.team = this.selected;
             },
             fetchTeams: function() {
@@ -68,20 +82,32 @@
                     });
             },
             saveTeam: function() {
-                fetch(endpoints.checklistApi, {
+                fetch(endpoints.teamApi, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(this.selected)
+                    body: JSON.stringify(this.selectedTeam)
                 })
                 .then(res => {
                     return res.json()
                 })
                 .then(json => {
-                    this.selected = json;
+                    this.selectedTeam = json;
                 });
-
+            },
+            addMember: function() {
+                this.selectedTeam.members.push({
+                    name: ""
+                });
+            },
+            removeMember: function(id) {
+                var members = this.selectedTeam.members;
+                var removed = members.filter(member => {
+                    return member.id != id
+                });
+                this.selectedTeam.members = removed;
+                this.saveTeam();
             }
         }
     }
