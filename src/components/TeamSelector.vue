@@ -1,23 +1,23 @@
 <template>
     <div class="form-inline col-md-6">
-        <div class="form-group mt-3 mb-5">
+        <div class="form-group mt-3">
             <h2>Select team</h2>
             <select class="form-select" v-model="selected" v-on:change="updateState">
                 <option disabled value="null">Please choose a team</option>
                 <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
             </select>
         </div>
-        <div class="form-group">
+        <div class="form-group mb-5">
             <button class="btn btn-primary" v-if="!newTeam" v-on:click="createEmptyTeam">
                 New team
             </button>
-            <div class="input-group" v-else>
+            <form class="input-group" v-else>
                 <label class="input-group-text" for="new-team-name">Name</label>
-                <input class="form-control" v-model="newTeam.name" id="new-team-name">
-                <button class="input-group-button" v-on:click="addTeam">
+                <input class="form-control" v-model="newTeam.name" id="new-team-name" ref="teamName">
+                <button class="input-group-button" v-on:click="addTeam" v-on:submit="addTeam">
                     Add
                 </button>
-            </div>
+            </form>
         </div>
         <div v-if="selectedTeam" class="card">
             <div class="form-group">
@@ -34,16 +34,16 @@
                             <span>{{member.name}}&nbsp;</span>
                             <a class="btn btn-default" href="#" v-on:click="removeMember(member.id)">-</a>
                         </div>
-                        <div class="input-group" v-else>
+                        <form class="input-group" v-else>
                             <label class="input-group-text" v-bind:for="index + '-name'">Name</label>
-                            <input class="form-control" v-model="member.name" v-bind:id="index + '-name'">
-                            <button class="input-group-button" v-on:click="saveTeam">
+                            <input class="form-control" v-model="member.name" v-bind:id="index + '-name'" :ref="index + '-memberName'">
+                            <button class="input-group-button" v-on:click="saveTeam" v-on:submit="saveTeam">
                                 Add
                             </button>
-                        </div>
+                        </form>
                     </li>
                 </ul>
-                <div>
+                <div class="float-right">
                     <button class="btn btn-danger mt-3" v-on:click="deleteTeam">
                         <span>Delete team</span>
                     </button>
@@ -57,6 +57,8 @@
 </template>
 
 <script>
+    import Vue from 'vue';
+
     const endpoints = {
         teamApi : process.env.VUE_APP_SERVER + '/api/teams'
     }
@@ -65,9 +67,8 @@
         name: 'team-selector',
         components: {},
         created: function() {
-            this.selected = this.$store.team;
-            
             this.updateTeams();
+            this.selected = this.$store.team;
         },
         data: function() {
             return {
@@ -80,7 +81,7 @@
         },
         methods: {
             updateState: function() {
-                this.selectedTeam = this.teams.find(team => team.name = this.selected);
+                this.selectedTeam = this.teams.find(team => team.name == this.selected);
                 this.$store.team = this.selected;
             },
             fetchTeams: function() {
@@ -121,20 +122,35 @@
             },
             addTeam: function() {
                 return this.postTeam(this.newTeam)
-                .then(() => {
+                .then(team => {
+                    var id = team.id;
                     this.newTeam = null;
-                    this.updateTeams();
+                    this.updateTeams()
+                    .then(teams =>{
+                        this.selectedTeam = teams.find(team => team.id == id);
+                        this.selected = this.selectedTeam.name;
+                    });
                 });
             },
             createEmptyTeam: function() {
                 this.newTeam = {
                     name: ""
                 };
+                Vue.nextTick()
+                    .then(() => {
+                        this.$refs.teamName.focus();
+                    });
             },
             addMember: function() {
-                this.selectedTeam.members.push({
+                var size = this.selectedTeam.members.push({
                     name: ""
                 });
+                var refName = (size-1) + '-memberName';
+                Vue.nextTick()
+                    .then(() => {
+                        this.$refs[refName][0].focus();
+                    });
+                
             },
             removeMember: function(id) {
                 var members = this.selectedTeam.members;
@@ -144,7 +160,7 @@
             },
             deleteTeam: function() {
                 var id = this.selectedTeam.id;
-                return fetch(endpoints.teamApi + '/' + this.selectedTeam.id, {
+                return fetch(endpoints.teamApi + '/' + id, {
                     method: 'DELETE'
                 })
                 .then(() => {
