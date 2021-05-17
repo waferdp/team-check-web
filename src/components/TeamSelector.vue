@@ -20,12 +20,7 @@
             </form>
         </div>
         <div v-if="selectedTeam" class="card">
-            <div class="form-group">
-                <!-- <label class="card-title" for="selected-name"> -->
-                <h3 class="card-title">{{selectedTeam.name}}</h3>
-                <!-- </label> -->
-                <!-- <input class="form-control" v-model="selectedTeam.name" id="selected-name"> -->
-            </div>
+            <h3 class="card-title">{{selectedTeam.name}}</h3>
             <h5 class="card-subtitle">Team members</h5>
             <div class="form-group">
                 <ul class="list-group offset-md-1">
@@ -68,7 +63,7 @@
         components: {},
         created: function() {
             this.updateTeams();
-            this.selected = this.$store.team;
+            this.selected = this.$store.state.team;
         },
         data: function() {
             return {
@@ -82,7 +77,8 @@
         methods: {
             updateState: function() {
                 this.selectedTeam = this.teams.find(team => team.name == this.selected);
-                this.$store.team = this.selected;
+                this.$store.commit('selectTeam', this.selected);
+                this.$emit('select', this.selected);
             },
             fetchTeams: function() {
                 this.loading = true;
@@ -117,7 +113,8 @@
             saveTeam: function() {
                 return this.postTeam(this.selectedTeam)
                 .then(json => {
-                    this.selectedTeam = json;
+                    this.selected = json.name;
+                    this.updateState();
                 });
             },
             addTeam: function() {
@@ -127,8 +124,8 @@
                     this.newTeam = null;
                     this.updateTeams()
                     .then(teams =>{
-                        this.selectedTeam = teams.find(team => team.id == id);
-                        this.selected = this.selectedTeam.name;
+                        this.selected = teams.find(team => team.id == id).name;
+                        this.updateState();
                     });
                 });
             },
@@ -164,9 +161,9 @@
                     method: 'DELETE'
                 })
                 .then(() => {
-                    this.selectedTeam = null;
                     this.selected = null;
                     this.teams = this.teams.filter(team => team.id != id);
+                    this.updateState();
                 });
             }
         }

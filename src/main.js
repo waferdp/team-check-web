@@ -28,9 +28,15 @@ Vue.use(Vuex);
 const Store = new Vuex.Store({
   state: {
     team: null,
-    survey: null
+    questions: null
   },
   mutations: {
+    selectTeam : function(team) {
+      this.state.team = team;
+    },
+    updateSurvey : function(questions) {
+      this.state.questions = questions;
+    }
   }
 });
 

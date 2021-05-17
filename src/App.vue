@@ -4,7 +4,10 @@
       <div class="container mt-5">
         <nav class="navbar navbar-dark bg-dark navbar-expand-md">
           <div class="container navbar-brand">
-            <h1>Team Performance Checklist</h1>
+            <h1>Team Performance Assessment</h1>
+          </div>
+          <div class="navbar-brand navbar-dark">
+            <h3>{{currentTeam}}</h3>
           </div>
           <div class="collapse navbar-collapse">
             <ul class="navbar-nav">
@@ -25,7 +28,7 @@
     </header>
     <main>
       <div class="container">
-        <router-view>
+        <router-view @select="selectTeam">
           <performance-checklist />
           <team-selector />
         </router-view>
@@ -43,6 +46,16 @@ export default {
   components: {
     PerformanceChecklist,
     TeamSelector
+  },
+  data: function() {
+    return {
+      currentTeam: null 
+    };
+  },
+  methods: {
+    selectTeam(team) {
+      this.currentTeam = team;
+    }
   }
 }
 </script>

@@ -60,8 +60,8 @@
             };
         },
         created: function() {
-            if(this.$store.questions) {
-                this.questions = this.$store.questions;
+            if(this.$store.state.questions) {
+                this.questions = this.$store.state.questions;
             } else {
                 this.fetchQuestions()
                 .then(json => {
@@ -106,7 +106,7 @@
                 this.pagination.currentPage = pageNumber;
             },
             update() {
-                this.$store.questions = this. questions;
+                this.$store.commit('updateSurvey', this.questions);
             },
             fetchQuestions() {
                 this.loading = true;
