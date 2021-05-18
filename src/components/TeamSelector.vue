@@ -32,7 +32,7 @@
                         <form class="input-group" v-else>
                             <label class="input-group-text" v-bind:for="index + '-name'">Name</label>
                             <input class="form-control" v-model="member.name" v-bind:id="index + '-name'" :ref="index + '-memberName'">
-                            <button class="input-group-button" v-on:click="saveTeam" v-on:submit="saveTeam">
+                            <button class="input-group-button" v-on:click="postMember(member)" v-on:submit="postMember(member)">
                                 Add
                             </button>
                         </form>
@@ -55,7 +55,10 @@
     import Vue from 'vue';
 
     const endpoints = {
-        teamApi : process.env.VUE_APP_SERVER + '/api/teams'
+        teamApi : process.env.VUE_APP_SERVER + '/api/teams',
+        teamMemberApi : function(teamId) {
+            return process.env.VUE_APP_SERVER + '/api/teams/' + teamId;
+        }
     }
 
     export default {
@@ -102,7 +105,8 @@
                 return fetch(endpoints.teamApi, {
                     method: 'POST',
                     headers: {
-                        'Content-Type': 'application/json'
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
                     },
                     body: JSON.stringify(team)
                 })
@@ -110,24 +114,52 @@
                     return res.json();
                 });
             },
-            saveTeam: function() {
+            addTeamMember: function() {
                 return this.postTeam(this.selectedTeam)
                 .then(json => {
                     this.selected = json.name;
                     this.updateState();
                 });
             },
-            addTeam: function() {
-                return this.postTeam(this.newTeam)
-                .then(team => {
-                    var id = team.id;
-                    this.newTeam = null;
-                    this.updateTeams()
-                    .then(teams =>{
-                        this.selected = teams.find(team => team.id == id).name;
-                        this.updateState();
-                    });
+            deleteMember: function(memberId) {
+                var url = endpoints.teamMemberApi(this.selectedTeam.id) + '/' + memberId;
+                return fetch(url, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    }
                 });
+                // .then( res => {
+                //     return res.json();
+                // })
+                // .then(team => {
+                //     this.updateTeam(team);
+                // });
+            },
+            postMember: function(member) {
+                return fetch(endpoints.teamMemberApi(this.selectedTeam.id), {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Accept': 'application/json'
+                    },
+                    body: JSON.stringify(member)
+                })
+                .then( res => {
+                    return res.json();
+                })
+                .then(team => {
+                    this.updateTeam(team);
+                });
+            },
+            updateTeam: function(team) {
+                    var id = team.id;
+                    var index = this.teams.findIndex(team => team.id == id);
+                    if(this.selectedTeam.id == this.teams[index].id) {
+                        this.selectedTeam = team;
+                    }
+                    this.teams[index] = team;
             },
             createEmptyTeam: function() {
                 this.newTeam = {
@@ -153,7 +185,7 @@
                 var members = this.selectedTeam.members;
                 var removed = members.filter(member => member.id != id);
                 this.selectedTeam.members = removed;
-                this.saveTeam();
+                this.deleteMember(id);
             },
             deleteTeam: function() {
                 var id = this.selectedTeam.id;
