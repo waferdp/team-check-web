@@ -117,11 +117,15 @@
                     return res.json();
                 });
             },
-            addTeamMember: function() {
-                return this.postTeam(this.selectedTeam)
+            addTeam: function() {
+                return this.postTeam(this.newTeam)
                 .then(json => {
-                    this.selected = json.name;
-                    this.updateState();
+                    this.newTeam = null;
+                    this.updateTeams()
+                    .then(() => {
+                        this.selected = json.name;
+                        this.updateState();
+                    });
                 });
             },
             deleteMember: function(memberId) {
@@ -133,12 +137,6 @@
                         'Accept': 'application/json'
                     }
                 });
-                // .then( res => {
-                //     return res.json();
-                // })
-                // .then(team => {
-                //     this.updateTeam(team);
-                // });
             },
             postMember: function(member) {
                 return fetch(endpoints.teamMemberApi(this.selectedTeam.id), {

@@ -53,10 +53,6 @@ export default {
     selectTeam(team) {
       this.currentTeam = team;
     }
-  },
-  mounted() {
-    let start = '/team-selector'
-    this.$router.push({ path: start});
   }
 }
 </script>
