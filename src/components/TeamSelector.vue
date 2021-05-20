@@ -66,7 +66,10 @@
         components: {},
         created: function() {
             this.updateTeams();
-            this.selected = this.$store.state.team;
+            if(this.$store.state.team) {
+                this.selectedTeam = this.$store.state.team;
+                this.selected = this.selectedTeam.name;
+            }
         },
         data: function() {
             return {
@@ -80,7 +83,9 @@
         methods: {
             updateState: function() {
                 this.selectedTeam = this.teams.find(team => team.name == this.selected);
-                this.$store.commit('selectTeam', this.selected);
+                //Why is commit not enough?
+                this.$store.commit('selectTeam', this.selectedTeam);
+                this.$store.state.team = this.selectedTeam;
                 this.$emit('select', this.selected);
             },
             fetchTeams: function() {
