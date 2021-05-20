@@ -83,8 +83,6 @@
         methods: {
             updateState: function() {
                 this.selectedTeam = this.teams.find(team => team.name == this.selected);
-                //Why is commit not enough?
-                this.$store.commit('selectTeam', this.selectedTeam);
                 this.$store.state.team = this.selectedTeam;
                 this.$emit('select', this.selected);
             },

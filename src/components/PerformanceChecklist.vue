@@ -96,6 +96,9 @@
                     items: items
                 };
             },
+            getTeamId() {
+                return this.$store.state.team?.id;
+            },
             nextPage() {
                 this.pagination.currentPage++;
             },
@@ -106,7 +109,7 @@
                 this.pagination.currentPage = pageNumber;
             },
             update() {
-                this.$store.commit('updateSurvey', this.questions);
+                this.$store.state.questions = this.questions;
             },
             fetchQuestions() {
                 this.loading = true;
@@ -143,20 +146,27 @@
                         errors.push(pageError);
                     }
                 }
+                if(!this.getTeamId()) {
+                    errors.push({page: 0, message: "Team not selected"});
+                }
+
                 this.errors = errors;
             },
             postSurvey() {
                 this.validateForm();
-
                 if(this.errors.length) {
                     return;
                 }
+                var teamAnswer = {
+                    teamId : this.getTeamId(),
+                    items : this.questions
+                };
                 fetch(endpoints.checklistApi, {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json'
                     },
-                    body: JSON.stringify(this.questions)
+                    body: JSON.stringify(teamAnswer)
                 })
                 .then(res =>{
                     alert('Response from server: ' + res.statusText);
