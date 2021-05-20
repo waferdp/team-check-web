@@ -20,7 +20,7 @@ const teamSelectorRoute = {
 }
 
 const Router = new VueRouter({
-  routes: [performanceChecklistRoute, teamSelectorRoute]
+  routes: [teamSelectorRoute, performanceChecklistRoute]
 });
 
 Vue.use(Vuex);
