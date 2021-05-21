@@ -18,6 +18,11 @@
                   <span class="nav-link">Survey</span>
                 </li>
               </router-link>
+              <router-link to="/team-assessment" custom v-slot="{navigate, isActive}">
+                <li :class="['nav-item', isActive && 'active']" @click="navigate" role="button">
+                  <span class="nav-link">Assessment</span>
+                </li>
+              </router-link>
             </ul>
           </div>
         </nav>
@@ -28,6 +33,7 @@
         <router-view @select="selectTeam">
           <team-selector />
           <performance-checklist />
+          <team-assessment />
         </router-view>
       </div>
     </main>
@@ -37,12 +43,14 @@
 <script>
 import PerformanceChecklist from './components/PerformanceChecklist.vue';
 import TeamSelector from './components/TeamSelector.vue';
+import TeamAssessment from './components/TeamAssessment.vue'
 
 export default {
   name: 'App',
   components: {
     PerformanceChecklist,
-    TeamSelector
+    TeamSelector,
+    TeamAssessment,
   },
   data: function() {
     return {

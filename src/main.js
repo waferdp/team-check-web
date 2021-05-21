@@ -4,6 +4,7 @@ import VueRouter from 'vue-router';
 import App from './App.vue';
 import PerformanceChecklist from './components/PerformanceChecklist.vue';
 import TeamSelector from './components/TeamSelector.vue';
+import TeamAssessment from './components/TeamAssessment.vue';
 
 Vue.use(VueRouter);
 
@@ -19,8 +20,14 @@ const teamSelectorRoute = {
   component: TeamSelector
 }
 
+const teamAssessmentRoute = { 
+  path: '/team-assessment',
+  name: 'team-assessment',
+  component: TeamAssessment
+}
+
 const Router = new VueRouter({
-  routes: [teamSelectorRoute, performanceChecklistRoute]
+  routes: [teamSelectorRoute, performanceChecklistRoute, teamAssessmentRoute]
 });
 
 Vue.use(Vuex);
