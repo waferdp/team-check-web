@@ -56,11 +56,11 @@ export default {
         getTeamId() {
             return this.$store.state.team?.id
         },
-        fetchAssessment(team) {
+        fetchAssessment() {
             var teamId = this.getTeamId()
             var url  = endpoints.teamAssessmentApi;
             if(teamId) {
-                url += '?teamId=' + team.id;
+                url += '?teamId=' + teamId;
             }
             return fetch(url)
                 .then(res => {
