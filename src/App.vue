@@ -2,30 +2,31 @@
   <div id="app">
         <header>
       <div class="container mt-5">
-        <nav class="navbar navbar-dark bg-dark navbar-expand-md">
-          <div class="container navbar-brand">
+        <b-navbar toggleable="lg" type="dark" variant="dark" class="container">
+          <b-navbar-brand href="#">
             <h1>{{ currentTeam || "Team"}} Self Assessment</h1>
-          </div>
-          <div class="collapse navbar-collapse">
-            <ul class="navbar-nav">
+          </b-navbar-brand>
+          <b-navbar-toggle target="nav-collapse"></b-navbar-toggle>
+          <b-collapse id="nav-collapse" is-nav>
+            <b-navbar-nav class="ml-auto">
               <router-link to="/team-selector" custom v-slot="{navigate, isActive}">
-                <li :class="['nav-item', isActive && 'active']" @click="navigate" role="button">            
+                <b-nav-item :active="isActive" @click="navigate" role="button" right>            
                   <span class="nav-link">Team</span>
-                </li>
+                </b-nav-item>
               </router-link>
               <router-link to="/performance-checklist" custom v-slot="{navigate, isActive}">
-                <li :class="['nav-item', isActive && 'active']" @click="navigate" role="button">
+                <b-nav-item :active="isActive" @click="navigate" role="button" right>
                   <span class="nav-link">Survey</span>
-                </li>
+                </b-nav-item>
               </router-link>
               <router-link to="/team-assessment" custom v-slot="{navigate, isActive}">
-                <li :class="['nav-item', isActive && 'active']" @click="navigate" role="button">
+                <b-nav-item :active="isActive" class="align-right" @click="navigate" role="button" right>
                   <span class="nav-link">Assessment</span>
-                </li>
+                </b-nav-item>
               </router-link>
-            </ul>
-          </div>
-        </nav>
+            </b-navbar-nav>
+          </b-collapse>
+        </b-navbar>
       </div>
     </header>
     <main>
@@ -44,6 +45,7 @@
 import PerformanceChecklist from './components/PerformanceChecklist.vue';
 import TeamSelector from './components/TeamSelector.vue';
 import TeamAssessment from './components/TeamAssessment.vue'
+
 
 export default {
   name: 'App',

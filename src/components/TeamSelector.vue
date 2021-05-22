@@ -1,8 +1,8 @@
 <template>
-    <div class="form-inline col-md-6">
-        <div class="form-group mt-3">
+    <div class="col-md-6">
+        <div class="form-inline form-group mt-3">
             <h2>Select team</h2>
-            <select class="form-select" v-model="selected" v-on:change="updateState">
+            <select class="form-select ml-2" v-model="selected" v-on:change="updateState">
                 <option disabled value="null">Please choose a team</option>
                 <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
             </select>
