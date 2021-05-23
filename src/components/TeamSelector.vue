@@ -20,6 +20,14 @@
             </form>
         </div>
         <div v-if="selectedTeam" class="card">
+            <div class="card-img-overlay">
+                <b-dropdown text="options" class="float-right">
+                    <b-dropdown-item v-on:click="deleteTeam">
+                        <span>Delete</span>
+                    </b-dropdown-item>
+                </b-dropdown>
+            </div>
+
             <h3 class="card-title">{{selectedTeam.name}}</h3>
             <h5 class="card-subtitle">Team members</h5>
             <div class="form-group">
@@ -39,9 +47,6 @@
                     </li>
                 </ul>
                 <div class="float-right">
-                    <button class="btn btn-danger mt-3" v-on:click="deleteTeam">
-                        <span>Delete team</span>
-                    </button>
                     <button class="btn btn-primary mt-3" v-on:click="addMember">
                         <span>New team member</span>
                     </button>
