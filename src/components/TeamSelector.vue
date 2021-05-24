@@ -3,7 +3,7 @@
         <div class="form-group mt-3">
             <h2>Select team</h2>
             <b-form-select v-model="selected" v-on:change="updateState">
-                <option disabled value="null">Please choose a team</option>
+                <option disabled value="null">Please choose / create a team</option>
                 <optgroup>
                     <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
                 </optgroup>
@@ -12,12 +12,13 @@
                 </optgroup>
             </b-form-select>
         </div>
-        <div class="form-group mb-5">
-            <form class="input-group" v-if="newTeam">
+        <div class="form-group mb-5" v-if="newTeam">
+            <h4>Create team</h4>
+            <form class="input-group">
                 <label class="input-group-text" for="new-team-name">Name</label>
                 <input class="form-control" v-model="newTeam.name" id="new-team-name" ref="teamName">
                 <button class="input-group-button" v-on:click="addTeam" v-on:submit="addTeam">
-                    Add
+                    Create
                 </button>
             </form>
         </div>
