@@ -1,17 +1,19 @@
 <template>
     <div class="col-md-6">
-        <div class="form-inline form-group mt-3">
+        <div class="form-group mt-3">
             <h2>Select team</h2>
-            <select class="form-select ml-2" v-model="selected" v-on:change="updateState">
+            <b-form-select v-model="selected" v-on:change="updateState">
                 <option disabled value="null">Please choose a team</option>
-                <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
-            </select>
+                <optgroup>
+                    <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
+                </optgroup>
+                <optgroup v-if="!newTeam">
+                    <option v-bind:value="null">Create new team</option>
+                </optgroup>
+            </b-form-select>
         </div>
         <div class="form-group mb-5">
-            <button class="btn btn-primary" v-if="!newTeam" v-on:click="createEmptyTeam">
-                New team
-            </button>
-            <form class="input-group" v-else>
+            <form class="input-group" v-if="newTeam">
                 <label class="input-group-text" for="new-team-name">Name</label>
                 <input class="form-control" v-model="newTeam.name" id="new-team-name" ref="teamName">
                 <button class="input-group-button" v-on:click="addTeam" v-on:submit="addTeam">
@@ -99,6 +101,12 @@
         },
         methods: {
             updateState: function() {
+                if(this.selected == null) {
+                    this.createEmptyTeam();
+                }
+                else {
+                    this.newTeam = null;
+                }
                 this.selectedTeam = this.teams.find(team => team.name == this.selected);
                 this.$store.state.team = this.selectedTeam;
                 this.$emit('select', this.selected);
