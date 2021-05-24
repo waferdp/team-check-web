@@ -10,9 +10,9 @@
             <div class="offset-md-2 col-md-2">
                 <span>Page {{pagination.currentPage}}</span>
             </div>
-            <div class="offset-md-2 col-md-3">
-                <button type="button" class="btn btn-outline-primary float-end" v-if="!isLastPage" v-on:click="nextPage">Next</button>
-                <input type="submit" class="btn btn-primary float-end" v-if="isLastPage" v-on:click="postSurvey">
+            <div class="offset-md-3 col-md-2 float-right" >
+                <button type="button" class="btn btn-outline-primary float-right" v-if="!isLastPage" v-on:click="nextPage">Next</button>
+                <input type="submit" class="btn btn-primary float-right" v-if="isLastPage" v-on:click="postSurvey">
             </div>
         </div>
         <div class="row" v-if="errors.length">

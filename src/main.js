@@ -5,9 +5,10 @@ import App from './App.vue';
 import PerformanceChecklist from './components/PerformanceChecklist.vue';
 import TeamSelector from './components/TeamSelector.vue';
 import TeamAssessment from './components/TeamAssessment.vue';
-import NavBarPlugin from 'bootstrap-vue';
+import { BootstrapVue, BootstrapVueIcons } from 'bootstrap-vue';
 
-Vue.use(NavBarPlugin);
+Vue.use(BootstrapVue);
+Vue.use(BootstrapVueIcons);
 Vue.use(VueRouter);
 
 const performanceChecklistRoute =   { 

@@ -20,8 +20,12 @@
             </form>
         </div>
         <div v-if="selectedTeam" class="card">
-            <div class="card-img-overlay">
-                <b-dropdown text="options" class="float-right">
+            <div class="corner-button">
+                <b-dropdown class="float-right" right text="Right align" variant="link" no-caret>
+                    <template #button-content>
+                        <b-icon icon="three-dots-vertical" font-scale="1"></b-icon>
+                    </template>
+                    
                     <b-dropdown-item v-on:click="deleteTeam">
                         <span>Delete</span>
                     </b-dropdown-item>
@@ -30,12 +34,14 @@
 
             <h3 class="card-title">{{selectedTeam.name}}</h3>
             <h5 class="card-subtitle">Team members</h5>
-            <div class="form-group">
+            <div class="form-group card-body">
                 <ul class="list-group offset-md-1">
                     <li class="list-item" v-for="(member, index) in this.selectedTeam.members" v-bind:key="index">
                         <div class="input-group" v-if="member.id">
-                            <span>{{member.name}}&nbsp;</span>
-                            <a class="btn btn-default" href="#" v-on:click="removeMember(member.id)">-</a>
+                            <span class="col-lg-10">{{member.name}}&nbsp;</span>
+                            <a class="btn btn-default text-black" href="#" v-on:click="removeMember(member.id)">
+                                <b-icon icon="trash" />
+                            </a>
                         </div>
                         <form class="input-group" v-else>
                             <label class="input-group-text" v-bind:for="index + '-name'">Name</label>
@@ -45,12 +51,12 @@
                             </button>
                         </form>
                     </li>
+                    <li v-if="canAdd"  class="list-item">
+                        <b-button variant="outline-secondary" @click="addMember">
+                            New team member
+                        </b-button>
+                    </li>
                 </ul>
-                <div class="float-right">
-                    <button class="btn btn-primary mt-3" v-on:click="addMember">
-                        <span>New team member</span>
-                    </button>
-                </div>
             </div>
         </div>
     </div>
@@ -83,6 +89,12 @@
                 loading: false,
                 newTeam: null,
                 teams: []
+            }
+        },
+        computed: {
+            canAdd() {
+                var allHasId = this.selectedTeam.members.every( member => member.id );
+                return allHasId;
             }
         },
         methods: {
@@ -207,3 +219,28 @@
         }
     }
 </script>
+
+<style>
+    .btn-link {
+        color: black;
+    }
+
+    .btn-link::hover {
+        color: grey;
+    }
+
+    .dropdown-toggle::after {
+        display: none;
+    }
+
+    a {
+        color: black;
+    }
+    
+    .corner-button {
+        display: inline-block;
+        position: absolute;
+        width: 100%;
+        float: right;
+    }
+</style>
