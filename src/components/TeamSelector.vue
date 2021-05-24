@@ -41,9 +41,9 @@
                 <ul class="list-group offset-md-1">
                     <li class="list-item" v-for="(member, index) in this.selectedTeam.members" v-bind:key="index">
                         <div class="input-group" v-if="member.id">
-                            <span class="col-lg-10">{{member.name}}&nbsp;</span>
-                            <a class="btn btn-default text-black" href="#" v-on:click="removeMember(member.id)">
-                                <b-icon icon="trash" />
+                            <span class="col-lg-10 col-sm-9">{{member.name}}&nbsp;</span>
+                            <a class="btn btn-default text-black col-xs-1" href="#" v-on:click="removeMember(member.id)">
+                                <b-icon class="float-right" icon="trash" />
                             </a>
                         </div>
                         <form class="input-group" v-else>
