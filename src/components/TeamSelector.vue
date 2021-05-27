@@ -2,7 +2,7 @@
     <div class="col-md-6">
         <div class="form-group mt-3">
             <h2>Select team</h2>
-            <b-form-select v-model="selected" v-on:change="updateState">
+            <b-form-select id="select-team" v-model="selected" v-on:change="updateState">
                 <option disabled value="null">Please choose / create a team</option>
                 <optgroup>
                     <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
@@ -17,7 +17,7 @@
             <form class="input-group">
                 <label class="input-group-text" for="new-team-name">Name</label>
                 <input class="form-control" v-model="newTeam.name" id="new-team-name" ref="teamName">
-                <button class="input-group-button" v-on:click="addTeam" v-on:submit="addTeam">
+                <button id="add-team" class="input-group-button" v-on:click="addTeam" v-on:submit="addTeam">
                     Create
                 </button>
             </form>
