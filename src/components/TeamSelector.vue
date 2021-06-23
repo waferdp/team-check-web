@@ -2,7 +2,7 @@
     <div class="col-md-6">
         <div class="form-group mt-3">
             <h2>Select team</h2>
-            <b-form-select id="select-team" v-model="selected" v-on:change="updateState">
+            <b-form-select id="select-team" v-model="selected" v-on:change="updateState" :disabled = "loading ? 'disabled' : false">
                 <option disabled value="null">Please choose / create a team</option>
                 <optgroup>
                     <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
@@ -11,6 +11,7 @@
                     <option v-bind:value="null">Create new team</option>
                 </optgroup>
             </b-form-select>
+            <sausage-spinner v-show="loading" class="float-right position-fixed" />
         </div>
         <div class="form-group mb-5" v-if="newTeam">
             <h4>Create team</h4>
@@ -67,6 +68,7 @@
 
 <script>
     import Vue from 'vue';
+    import SausageSpinner from './SausageSpinner.vue'
 
     const endpoints = {
         teamApi : process.env.VUE_APP_SERVER + '/api/teams',
@@ -77,7 +79,9 @@
 
     export default {
         name: 'team-selector',
-        components: {},
+        components: {
+            SausageSpinner
+        },
         created: function() {
             this.updateTeams();
             if(this.$store.state.team) {
