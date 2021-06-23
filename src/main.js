@@ -29,9 +29,6 @@ const teamAssessmentRoute = {
   component: TeamAssessment
 }
 
-const Router = new VueRouter({
-  routes: [teamSelectorRoute, performanceChecklistRoute, teamAssessmentRoute]
-});
 
 Vue.use(Vuex);
 
@@ -47,6 +44,20 @@ const Store = new Vuex.Store({
     updateSurvey : function(questions) {
       this.state.questions = questions;
     }
+  }
+});
+
+
+const Router = new VueRouter({
+  routes: [teamSelectorRoute, performanceChecklistRoute, teamAssessmentRoute]
+});
+
+Router.beforeEach((to, from, next) => {
+  if(to.name !== 'team-selector' && !Store.state.team) {
+    next({name: 'team-selector'})
+  }
+  else {
+    next()
   }
 });
 
