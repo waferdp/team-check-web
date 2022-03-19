@@ -35,32 +35,9 @@
                     </b-dropdown-item>
                 </b-dropdown>
             </div>
-
-            <h3 class="card-title">{{selectedTeam.name}}</h3>
-            <h5 class="card-subtitle">Team members</h5>
-            <div class="form-group card-body">
-                <ul class="list-group offset-md-1">
-                    <li class="list-item" v-for="(member, index) in this.selectedTeam.members" v-bind:key="index">
-                        <div class="input-group" v-if="member.id">
-                            <span class="col-lg-10 col-sm-9">{{member.name}}&nbsp;</span>
-                            <a class="btn btn-default text-black col-xs-1" href="#" v-on:click="removeMember(member.id)">
-                                <b-icon class="float-right" icon="trash" />
-                            </a>
-                        </div>
-                        <form class="input-group" v-else>
-                            <label class="input-group-text" v-bind:for="index + '-name'">Name</label>
-                            <input class="form-control" v-model="member.name" v-bind:id="index + '-name'" :ref="index + '-memberName'">
-                            <button class="input-group-button" v-on:click="postMember(member)" v-on:submit="postMember(member)">
-                                Add
-                            </button>
-                        </form>
-                    </li>
-                    <li v-if="canAdd"  class="list-item">
-                        <b-button variant="outline-secondary" @click="addMember">
-                            New team member
-                        </b-button>
-                    </li>
-                </ul>
+            <div class="card-body">
+                <h3 class="card-title">{{selectedTeam.name}}</h3>
+                <p class="card-text">{{selectedTeam.description}}</p>
             </div>
         </div>
     </div>
@@ -158,32 +135,6 @@
                     });
                 });
             },
-            deleteMember: function(memberId) {
-                var url = endpoints.teamMemberApi(this.selectedTeam.id) + '/' + memberId;
-                return fetch(url, {
-                    method: 'DELETE',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    }
-                });
-            },
-            postMember: function(member) {
-                return fetch(endpoints.teamMemberApi(this.selectedTeam.id), {
-                    method: 'POST',
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Accept': 'application/json'
-                    },
-                    body: JSON.stringify(member)
-                })
-                .then( res => {
-                    return res.json();
-                })
-                .then(team => {
-                    this.updateTeam(team);
-                });
-            },
             updateTeam: function(team) {
                     var id = team.id;
                     var index = this.teams.findIndex(team => team.id == id);
@@ -200,23 +151,6 @@
                     .then(() => {
                         this.$refs.teamName.focus();
                     });
-            },
-            addMember: function() {
-                var size = this.selectedTeam.members.push({
-                    name: ""
-                });
-                var refName = (size-1) + '-memberName';
-                Vue.nextTick()
-                    .then(() => {
-                        this.$refs[refName][0].focus();
-                    });
-                
-            },
-            removeMember: function(id) {
-                var members = this.selectedTeam.members;
-                var removed = members.filter(member => member.id != id);
-                this.selectedTeam.members = removed;
-                this.deleteMember(id);
             },
             deleteTeam: function() {
                 var id = this.selectedTeam.id;
@@ -254,6 +188,5 @@
         display: inline-block;
         position: absolute;
         width: 100%;
-        float: right;
     }
 </style>

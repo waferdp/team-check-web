@@ -79,10 +79,6 @@ export default {
                 .then(res => {
                     if (!res.ok) { 
                         throw res;
-                        // res.text()
-                        // .then(text => {
-                        //     throw text; 
-                        // });
                     }
                     else {
                         return res.json();

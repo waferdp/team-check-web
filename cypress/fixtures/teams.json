@@ -1,23 +1,6 @@
 [
     {
       "name": "Carbuncles",
-      "members": [
-        {
-          "name": "Johnny",
-          "id": "70745c0b-77eb-4923-95a3-e9baaefd33f8",
-          "created": "2021-05-16T20:30:16.906Z"
-        },
-        {
-          "name": "Sonny",
-          "id": "56215a31-651e-41bc-8943-5f194e2ea3d9",
-          "created": "2021-05-16T20:30:21.375Z"
-        },
-        {
-          "name": "Donny",
-          "id": "e2d76f61-2591-4d26-afe2-51473ea371f0",
-          "created": "2021-05-16T20:30:26.594Z"
-        }
-      ],
       "id": "0593ac8d-d57b-4931-a681-4c23bf6a21d8",
       "created": "2021-05-16T20:30:07.981Z"
     }
