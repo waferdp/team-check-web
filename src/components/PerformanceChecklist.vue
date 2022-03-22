@@ -169,8 +169,8 @@
                     body: JSON.stringify(teamAnswer)
                 })
                 .then(res =>{
-                    alert('Response from server: ' + res.statusText);
                     console.log(res);
+                    this.$router.push({ name: 'team-assessment'});
                 });
             }
         }
