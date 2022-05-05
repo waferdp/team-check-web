@@ -40,6 +40,11 @@
                 <p class="card-text">{{selectedTeam.description}}</p>
             </div>
         </div>
+        <div v-if="selectedTeam" class="row mt-3">
+            <div class="offset-md-9 col-md-3">
+                <button type="button" class="btn btn-primary" v-on:click="startSurvey">Start Survey</button>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -162,6 +167,9 @@
                     this.teams = this.teams.filter(team => team.id != id);
                     this.updateState();
                 });
+            },
+            startSurvey: function() {
+                this.$router.push({ name: 'performance-checklist'});
             }
         }
     }
