@@ -2,13 +2,24 @@
     <div v-if="!loading">
         <div v-if="assessment">
             <h3>Assessment Summary</h3>
-            <div>
-                <span>Your team is {{assessment.stage}}</span>
+            <div class="row">
+                <div class="col-md-3">
+                    <img v-if="assessment.stage == 'FormingStorming'" class="stage" src="forming_storming.png" >
+                    <img v-if="assessment.stage == 'Norming'" class="stage" src="norming.png">
+                    <img v-if="assessment.stage == 'Performing'" class="stage" src="performing.png">
+                </div>
             </div>
-            <div>
-                <span>Your average score is {{assessment.average}}</span>
+            <div class="row">
+                <div class="col-md-3">
+                    <span>Your team is <strong>{{assessment.stage}}</strong></span>
+                </div>
             </div>
-            <div v-if="assessment.high.length">
+            <div class="row">
+                <div class="col-md-3">
+                    <span>Your average score is {{assessment.average}}</span>
+                </div>
+            </div>
+            <div v-if="assessment.high.length" class="mt-5">
                 <h3>Assessment Strengths</h3>    
                 <ul>
                     <li v-for="item in assessment.high" v-bind:key="item.key">
@@ -16,7 +27,7 @@
                     </li>
                 </ul>
             </div>
-            <div v-if="assessment.low.length">
+            <div v-if="assessment.low.length" class="mt-5">
                 <h3>Assessment Weaknesses</h3>    
                 <ul>
                     <li v-for="item in assessment.low" v-bind:key="item.key">
@@ -88,3 +99,10 @@ export default {
     }
 }
 </script>
+
+<style>
+img.stage {
+    width: auto; 
+    height: 200px;
+}
+</style>
