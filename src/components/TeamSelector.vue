@@ -1,50 +1,60 @@
 <template>
-    <div class="row">
-        <div class="col-md-12">
-            <div class="form-group mt-3">
-                <h2>Select team</h2>
-                <b-form-select id="select-team" v-model="selected" v-on:change="updateState" :disabled = "loading ? 'disabled' : false">
-                    <option disabled value="null">Please choose / create a team</option>
-                    <optgroup>
-                        <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
-                    </optgroup>
-                    <optgroup v-if="!newTeam">
-                        <option v-bind:value="null">Create new team</option>
-                    </optgroup>
-                </b-form-select>
-                <sausage-spinner v-show="loading" class="float-right position-fixed" />
-            </div>
-            <div class="form-group mb-5" v-if="newTeam">
-                <h4>Create team</h4>
-                <form class="input-group">
-                    <label class="input-group-text" for="new-team-name">Name</label>
-                    <input class="form-control" v-model="newTeam.name" id="new-team-name" ref="teamName">
-                    <button id="add-team" class="input-group-button" v-on:click="addTeam" v-on:submit="addTeam">
-                        Create
-                    </button>
-                </form>
-            </div>
-            <div v-if="selectedTeam" class="card">
-                <div class="corner-button">
-                    <b-dropdown class="float-right" right text="Right align" variant="link" no-caret>
-                        <template #button-content>
-                            <b-icon icon="three-dots-vertical" font-scale="1"></b-icon>
-                        </template>
-                        
-                        <b-dropdown-item v-on:click="deleteTeam">
-                            <span>Delete</span>
-                        </b-dropdown-item>
-                    </b-dropdown>
+    <div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group mt-3">
+                    <h2>Select team</h2>
+                    <b-form-select id="select-team" v-model="selected" v-on:change="updateState" :disabled = "loading ? 'disabled' : false">
+                        <option disabled value="null">Please choose / create a team</option>
+                        <optgroup>
+                            <option v-for="team in teams" v-bind:key="team.id">{{team.name}}</option>
+                        </optgroup>
+                        <optgroup v-if="!newTeam">
+                            <option v-bind:value="null">Create new team</option>
+                        </optgroup>
+                    </b-form-select>
                 </div>
-                <div class="card-body">
-                    <h3 class="card-title">{{selectedTeam.name}}</h3>
-                    <p class="card-text">{{selectedTeam.description}}</p>
+                <div class="form-group mb-5" v-if="newTeam">
+                    <h4>Create team</h4>
+                    <form class="input-group">
+                        <label class="input-group-text" for="new-team-name">Name</label>
+                        <input class="form-control" v-model="newTeam.name" id="new-team-name" ref="teamName">
+                        <button id="add-team" class="input-group-button" v-on:click="addTeam" v-on:submit="addTeam">
+                            Create
+                        </button>
+                    </form>
                 </div>
             </div>
-            <div v-if="selectedTeam" class="row mt-3">
-                <div class="offset-md-9 col-md-3">
-                    <button type="button" class="btn btn-primary" v-on:click="startSurvey">Start Survey</button>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <sausage-spinner v-show="loading" class="middle position-fixed" />
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div v-if="selectedTeam" class="card">
+                    <div class="corner-button">
+                        <b-dropdown class="float-right" right text="Right align" variant="link" no-caret>
+                            <template #button-content>
+                                <b-icon icon="three-dots-vertical" font-scale="1"></b-icon>
+                            </template>
+                            
+                            <b-dropdown-item v-on:click="deleteTeam">
+                                <span>Delete</span>
+                            </b-dropdown-item>
+                        </b-dropdown>
+                    </div>
+                    <div class="card-body">
+                        <h3 class="card-title">{{selectedTeam.name}}</h3>
+                        <p class="card-text">{{selectedTeam.description}}</p>
+                    </div>
                 </div>
+            </div>
+        </div>
+        <div class="row mt-3" v-if="selectedTeam">
+            <div class="offset-md-9 col-md-3 align-right">
+                <button type="button" class="btn btn-primary float-right" v-on:click="startSurvey">Start Survey</button>
             </div>
         </div>
     </div>
@@ -198,5 +208,10 @@
         display: inline-block;
         position: absolute;
         width: 100%;
+    }
+
+    .middle {
+        width: 67%;
+        text-align: center;
     }
 </style>

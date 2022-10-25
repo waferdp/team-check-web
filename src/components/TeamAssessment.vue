@@ -1,21 +1,21 @@
 <template>
     <div v-if="!loading">
         <div v-if="assessment">
-            <h3>Assessment Summary</h3>
+            <h2>Assessment Summary</h2>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-12">
                     <img v-if="assessment.stage == 'FormingStorming'" class="stage" src="forming_storming.png" >
                     <img v-if="assessment.stage == 'Norming'" class="stage" src="norming.png">
                     <img v-if="assessment.stage == 'Performing'" class="stage" src="performing.png">
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-12">
                     <span>Your team is <strong>{{assessment.stage}}</strong></span>
                 </div>
             </div>
             <div class="row">
-                <div class="col-md-3">
+                <div class="col-md-12">
                     <span>Your average score is {{assessment.average}}</span>
                 </div>
             </div>
