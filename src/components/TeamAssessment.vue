@@ -11,7 +11,8 @@
             </div>
             <div class="row">
                 <div class="col-md-12">
-                    <span>Your team is <strong>{{assessment.stage}}</strong></span>
+                    <div v-html="markdownToHtml"></div>
+                    <!-- <span>Your team is <strong>{{assessment.stage}}</strong></span> -->
                 </div>
             </div>
             <div class="row">
@@ -43,10 +44,12 @@
 </template>
 
 <script>
+var marked = require('marked')
 
-    const endpoints = {
-        teamAssessmentApi : process.env.VUE_APP_SERVER + '/api/team-assessments',
-    }
+const endpoints = {
+    teamAssessmentApi : process.env.VUE_APP_SERVER + '/api/team-assessments',
+    teamAssesmentStatic: process.env.VUE_APP_BASE_URL
+}
 
 
 export default {
@@ -54,19 +57,24 @@ export default {
         return {
             assessment : null,
             loading: true,
-            error: null
+            error: null,
+            markdownToHtml: null
         }
     },
     computed: {
         hasData() {
             return this.assessment == true;
-        },
+        }
     },
     created: function() {
         this.fetchAssessment()
             .then(apiAssessment => {
                 this.loading = false;
                 this.assessment = apiAssessment;
+                this.fetchStaticAssesmentText(apiAssessment.stage)
+                    .then(markdown => {
+                        this.markdownToHtml = marked.marked(markdown)
+                    })
             })
             .catch(error => {
                 this.loading = false;
@@ -95,6 +103,18 @@ export default {
                         return res.json();
                     }
                 });                
+        },
+        fetchStaticAssesmentText(teamStage) {
+            var url = `${endpoints.teamAssesmentStatic}/${teamStage}.md`
+            return fetch(url)
+                .then(result => {
+                    if (!result.ok) {
+                        throw result;
+                    }
+                    else {
+                        return result.text()
+                    }
+                });
         }
     }
 }
