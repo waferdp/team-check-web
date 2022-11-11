@@ -1,7 +1,5 @@
 
-name: Azure Blob storage  - TeamCheckFrontend, Build and deploy Vue frontend in node
-
-name: Build and Deploy
+name: Build and Deploy - Github pages
 on: [push]
 permissions:
   contents: write
