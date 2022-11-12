@@ -29,7 +29,7 @@
     import ChecklistItem from './ChecklistItem.vue';
 
     const endpoints = {
-        checklistQuestions : '/performance_checklist.json',
+        checklistQuestions : './performance_checklist.json',
         checklistApi : process.env.VUE_APP_SERVER + '/api/performance-checklists'
     }
 
