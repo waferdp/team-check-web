@@ -2,7 +2,7 @@ name: Build and Deploy - Github pages
 on: 
   push:
     branches:
-      - main
+      - pages
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
@@ -16,7 +16,7 @@ jobs:
     if: github.event_name == 'push' || (github.event_name == 'pull_request' && github.event.action != 'closed')
     concurrency: ci-${{ github.ref }} # Recommended if you intend to make multiple deployments in quick succession.
     runs-on: ubuntu-latest
-    environment: gh-pages
+    environment: production
     name: Build and Deploy Job
     steps:
       - name: Checkout 🛎️
