@@ -2,7 +2,7 @@ name: Build and Deploy - Github pages
 on: 
   push:
     branches:
-      - pages
+      - main
   pull_request:
     types: [opened, synchronize, reopened, closed]
     branches:
