@@ -2,9 +2,7 @@ module.exports = {
     configureWebpack: {
       devtool: 'source-map'
     },
-    publicPath: process.env.NODE_ENV === 'gh-pages'
-      ? '/team-check-web/'
-      : '/',
+    publicPath: process.env.NODE_ENV === 'production' ? '/team-check-web/' : '/',
     chainWebpack: config => {
       config
       .plugin('html')
